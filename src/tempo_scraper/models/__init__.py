@@ -1,0 +1,1 @@
+"""Models module for Tempo.co scraper."""
