@@ -114,6 +114,7 @@ python -m src.tempo_scraper article --url https://www.tempo.co/article-url
 - `--extract-content`: Extract full content for each article (default: False)
 - `--rubric RUBRIC`: Filter articles by rubric (default: None)
 - `--login`: Use authentication for premium content access (default: False)
+- `--categorize`: Categorize articles by category in output (default: False)
 
 #### Article Extractor Options
 - `--url URL`: URL of the article to extract (required)
