@@ -125,7 +125,7 @@ def is_article_free(link_element: BeautifulSoup) -> bool:
     Returns:
         True if free, False if premium
     """
-    # Look for span with class "inline-flex bg-primary-main p-[1.7px] rounded-[1px]"
+    # Look for span with class "inline-flex bg-primary-main p-[1.7px] rounded-[1.7px]"
     span_tag = link_element.find('span', class_=INDEX_SELECTORS["premium_indicator"])
     
     # If premium indicator is found, article is not free

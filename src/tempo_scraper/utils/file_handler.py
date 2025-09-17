@@ -10,7 +10,8 @@ def save_articles_to_json(
     articles: List[Article],
     output_dir: str,
     is_index_scraping: bool = True,
-    scraping_options: Dict[str, Any] = None
+    scraping_options: Dict[str, Any] = None,
+    categorize: bool = False
 ) -> str:
     """
     Save articles data to a JSON file with timestamp-based naming.
@@ -20,6 +21,7 @@ def save_articles_to_json(
         output_dir: Directory to save the file
         is_index_scraping: Whether this is index scraping or single article extraction
         scraping_options: Options used for scraping
+        categorize: Whether to categorize articles by category
         
     Returns:
         Path to the saved file
@@ -55,26 +57,72 @@ def save_articles_to_json(
                 }
                 simplified_articles.append(simplified_article)
             
-            output_data = {
-                "metadata": {
-                    "type": "index",
-                    "timestamp": metadata_timestamp,
-                    "scraping_options": scraping_options or {},
-                    "total_articles": len(articles)
-                },
-                "articles": simplified_articles
-            }
+            # Categorize articles if requested
+            if categorize:
+                categorized_articles = {}
+                category_counts = {}
+                for article in simplified_articles:
+                    category = article["category"]
+                    if category not in categorized_articles:
+                        categorized_articles[category] = []
+                        category_counts[category] = 0
+                    categorized_articles[category].append(article)
+                    category_counts[category] += 1
+                
+                output_data = {
+                    "metadata": {
+                        "type": "index",
+                        "timestamp": metadata_timestamp,
+                        "scraping_options": scraping_options or {},
+                        "total_articles": len(articles),
+                        "categories": category_counts
+                    },
+                    "articles": categorized_articles
+                }
+            else:
+                output_data = {
+                    "metadata": {
+                        "type": "index",
+                        "timestamp": metadata_timestamp,
+                        "scraping_options": scraping_options or {},
+                        "total_articles": len(articles)
+                    },
+                    "articles": simplified_articles
+                }
         else:
             # Include full article data
-            output_data = {
-                "metadata": {
-                    "type": "index",
-                    "timestamp": metadata_timestamp,
-                    "scraping_options": scraping_options or {},
-                    "total_articles": len(articles)
-                },
-                "articles": [article.__dict__ for article in articles]
-            }
+            # Categorize articles if requested
+            if categorize:
+                categorized_articles = {}
+                category_counts = {}
+                for article in articles:
+                    category = article.metadata.category
+                    if category not in categorized_articles:
+                        categorized_articles[category] = []
+                        category_counts[category] = 0
+                    categorized_articles[category].append(article.__dict__)
+                    category_counts[category] += 1
+                
+                output_data = {
+                    "metadata": {
+                        "type": "index",
+                        "timestamp": metadata_timestamp,
+                        "scraping_options": scraping_options or {},
+                        "total_articles": len(articles),
+                        "categories": category_counts
+                    },
+                    "articles": categorized_articles
+                }
+            else:
+                output_data = {
+                    "metadata": {
+                        "type": "index",
+                        "timestamp": metadata_timestamp,
+                        "scraping_options": scraping_options or {},
+                        "total_articles": len(articles)
+                    },
+                    "articles": [article.__dict__ for article in articles]
+                }
     else:
         # Single article extraction
         output_data = articles[0].__dict__ if articles else {}

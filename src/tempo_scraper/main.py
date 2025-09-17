@@ -78,7 +78,8 @@ def scrape_index_pages(options: ScrapingOptions) -> str:
         "start_date": options.start_date or "",
         "end_date": options.end_date or "",
         "rubric": options.rubric or "",
-        "article_per_page": options.article_per_page
+        "article_per_page": options.article_per_page,
+        "categorize": options.categorize
     }
     
     # Save articles to JSON file
@@ -87,7 +88,8 @@ def scrape_index_pages(options: ScrapingOptions) -> str:
         all_articles, 
         output_dir, 
         is_index_scraping=True,
-        scraping_options=scraping_options
+        scraping_options=scraping_options,
+        categorize=options.categorize
     )
     
     return output_file
@@ -136,6 +138,7 @@ def main():
     index_parser.add_argument("--extract-content", action="store_true", help="Extract full content for each article (default: False)")
     index_parser.add_argument("--rubric", type=str, default=None, help="Rubric to filter by (default: None)")
     index_parser.add_argument("--login", action="store_true", help="Use authentication for premium content access (default: False)")
+    index_parser.add_argument("--categorize", action="store_true", help="Categorize articles by category (default: False)")
     
     # Subparser for article extractor
     article_parser = subparsers.add_parser('article', help='Extract content from a single article')
@@ -171,7 +174,8 @@ def main():
             article_per_page=args.article_per_page,
             extract_content=args.extract_content,
             rubric=args.rubric,
-            use_auth=args.login
+            use_auth=args.login,
+            categorize=args.categorize
         )
         
         # Run index scraper
