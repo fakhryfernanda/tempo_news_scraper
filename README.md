@@ -282,6 +282,39 @@ For more details about this limitation, see:
 
 See `requirements.txt` for detailed dependencies.
 
+## Valid Rubrics
+
+The following rubrics are available for use with the `--rubric` parameter (in lowercase with dashes for multi-word rubrics):
+
+- politik
+- hukum
+- ekonomi
+- lingkungan
+- wawancara
+- sains
+- investigasi
+- cekfakta
+- kolom
+- hiburan
+- internasional
+- arsip
+- otomotif
+- olahraga
+- sepakbola
+- digital
+- gaya-hidup
+- teroka
+- prelude
+- tokoh
+- video
+- foto
+- data
+- infografik
+- pemilu
+- newsletter
+- info-tempo
+- ramadan
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
