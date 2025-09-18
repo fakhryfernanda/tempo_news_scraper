@@ -46,6 +46,30 @@ def scrape_index_pages(options: ScrapingOptions) -> str:
         # Scrape the page
         articles = scrape_index_page(url, page, options.article_per_page)
         
+        # Check if we should stop scraping (if less than expected articles found)
+        if len(articles) < options.article_per_page:
+            logger.info(f"Found only {len(articles)} articles on page {page}, which is less than the expected {options.article_per_page}. Stopping scraping.")
+            # Add the articles from this page to the collection
+            filtered_articles = filter_articles_by_access(articles)
+            
+            # If extract_content is True, extract full content for each article
+            if options.extract_content:
+                articles_with_content = extract_content_for_articles(filtered_articles)
+                all_articles.extend(articles_with_content)
+            else:
+                # Convert ArticleMetadata to Article objects (without content)
+                articles_as_objects = [
+                    Article(
+                        metadata=meta,
+                        content=[],
+                        tags=[]
+                    ) for meta in filtered_articles
+                ]
+                all_articles.extend(articles_as_objects)
+            
+            # Break the loop as we've found fewer articles than expected
+            break
+        
         # Filter articles based on access rights
         filtered_articles = filter_articles_by_access(articles)
         
@@ -73,7 +97,7 @@ def scrape_index_pages(options: ScrapingOptions) -> str:
     scraping_options = {
         "extract_content": options.extract_content,
         "start_page": options.start_page,
-        "end_page": options.end_page,
+        "end_page": page,  # Use the actual last page scraped
         "start_date": options.start_date or "",
         "end_date": options.end_date or "",
         "rubric": options.rubric or "",
