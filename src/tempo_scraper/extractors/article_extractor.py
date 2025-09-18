@@ -7,7 +7,7 @@ from urllib.parse import urljoin, urlparse
 from ..core.session import create_session
 from ..core.logging import logger
 from ..core.selectors import ARTICLE_SELECTORS, HEADERS
-from ..models.article import Article, ArticleMetadata, Image
+from ..models.article import Article, ArticleMetadata
 from ..utils.date_parser import parse_publication_datetime
 
 def extract_article_content(url: str, use_auth: bool = False) -> Optional[Article]:
@@ -85,15 +85,8 @@ def extract_article_content(url: str, use_auth: bool = False) -> Optional[Articl
                 if tag_text:
                     tags.append(tag_text)
         
-        # Extract images
+        # Extract images - disabled as per requirement
         images = []
-        img_tags = article_element.find_all(ARTICLE_SELECTORS["image"])
-        for img in img_tags:
-            src = img.get('src', '')
-            alt = img.get('alt', '')
-            # Only add if src is not empty and not the ads logo
-            if src and src != ARTICLE_SELECTORS["ads_logo"]:
-                images.append(Image(src=src, alt=alt))
         
         # Parse publication datetime
         pub_datetime = parse_publication_datetime(pub_date)
@@ -114,8 +107,7 @@ def extract_article_content(url: str, use_auth: bool = False) -> Optional[Articl
         article = Article(
             metadata=metadata,
             content=content_paragraphs,
-            tags=tags,
-            images=images
+            tags=tags
         )
         
         return article

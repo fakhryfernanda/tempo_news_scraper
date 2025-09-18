@@ -8,7 +8,7 @@ import os
 import json
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-from tempo_scraper.models.article import Article, ArticleMetadata, Image
+from tempo_scraper.models.article import Article, ArticleMetadata
 from tempo_scraper.utils.date_parser import parse_publication_datetime
 from tempo_scraper.utils.validators import validate_date_format, validate_date_range
 from tempo_scraper.utils.url_builder import build_index_url
@@ -86,22 +86,15 @@ def test_data_models():
     assert metadata.category == "test"
     assert metadata.is_free == True
     
-    # Test Image
-    image = Image(src="test.jpg", alt="Test Image")
-    assert image.src == "test.jpg"
-    assert image.alt == "Test Image"
-    
     # Test Article
     article = Article(
         metadata=metadata,
         content=["Paragraph 1", "Paragraph 2"],
-        tags=["test", "article"],
-        images=[image]
+        tags=["test", "article"]
     )
     
     assert len(article.content) == 2
     assert len(article.tags) == 2
-    assert len(article.images) == 1
     
     print("✓ Data models tests passed")
 

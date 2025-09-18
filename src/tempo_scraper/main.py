@@ -58,8 +58,7 @@ def scrape_index_pages(options: ScrapingOptions) -> str:
                 Article(
                     metadata=meta,
                     content=[],
-                    tags=[],
-                    images=[]
+                    tags=[]
                 ) for meta in filtered_articles
             ]
             all_articles.extend(articles_as_objects)

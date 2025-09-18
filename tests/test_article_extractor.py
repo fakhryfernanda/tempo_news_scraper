@@ -10,7 +10,7 @@ import glob
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from tempo_scraper.extractors.article_extractor import extract_article_content
-from tempo_scraper.models.article import Article, Image
+from tempo_scraper.models.article import Article
 from tempo_scraper.utils.file_handler import save_articles_to_json
 
 def test_logo_filtering():
@@ -30,13 +30,7 @@ def test_logo_filtering():
     article = Article(
         metadata=metadata,
         content=['Test content paragraph 1', 'Test content paragraph 2'],
-        tags=['test', 'article'],
-        images=[
-            Image(src='/img/logo-tempo-ads.svg', alt='Logo'),
-            Image(src='https://example.com/real-image.jpg', alt='Real Image'),
-            Image(src='/img/logo-tempo-ads.svg', alt='Another Logo'),
-            Image(src='https://example.com/another-real-image.jpg', alt='Another Real Image')
-        ]
+        tags=['test', 'article']
     )
     
     # Save the mock data to a temporary file

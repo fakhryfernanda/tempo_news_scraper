@@ -10,7 +10,7 @@ import tempfile
 import glob
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-from tempo_scraper.models.article import Article, ArticleMetadata, Image
+from tempo_scraper.models.article import Article, ArticleMetadata
 from tempo_scraper.utils.file_handler import save_articles_to_json
 
 def test_categorization_disabled():
@@ -27,8 +27,7 @@ def test_categorization_disabled():
                 is_free=True
             ),
             content=['Content 1'],
-            tags=['politik'],
-            images=[]
+            tags=['politik']
         ),
         Article(
             metadata=ArticleMetadata(
@@ -38,8 +37,7 @@ def test_categorization_disabled():
                 is_free=True
             ),
             content=['Content 2'],
-            tags=['hukum'],
-            images=[]
+            tags=['hukum']
         ),
         Article(
             metadata=ArticleMetadata(
@@ -49,8 +47,7 @@ def test_categorization_disabled():
                 is_free=True
             ),
             content=['Content 3'],
-            tags=['politik'],
-            images=[]
+            tags=['politik']
         )
     ]
     
@@ -92,8 +89,7 @@ def test_categorization_enabled():
                 is_free=True
             ),
             content=['Content 1'],
-            tags=['politik'],
-            images=[]
+            tags=['politik']
         ),
         Article(
             metadata=ArticleMetadata(
@@ -103,8 +99,7 @@ def test_categorization_enabled():
                 is_free=True
             ),
             content=['Content 2'],
-            tags=['hukum'],
-            images=[]
+            tags=['hukum']
         ),
         Article(
             metadata=ArticleMetadata(
@@ -114,8 +109,7 @@ def test_categorization_enabled():
                 is_free=True
             ),
             content=['Content 3'],
-            tags=['politik'],
-            images=[]
+            tags=['politik']
         ),
         Article(
             metadata=ArticleMetadata(
@@ -125,8 +119,7 @@ def test_categorization_enabled():
                 is_free=True
             ),
             content=['Content 4'],
-            tags=['olahraga'],
-            images=[]
+            tags=['olahraga']
         )
     ]
     
@@ -184,8 +177,7 @@ def test_categorization_with_full_content():
                 publication_date='2025-09-12'
             ),
             content=['Paragraph 1', 'Paragraph 2'],
-            tags=['politik', 'election'],
-            images=[Image(src='image1.jpg', alt='Image 1')]
+            tags=['politik', 'election']
         ),
         Article(
             metadata=ArticleMetadata(
@@ -196,8 +188,7 @@ def test_categorization_with_full_content():
                 publication_date='2025-09-13'
             ),
             content=['Legal content paragraph 1'],
-            tags=['hukum', 'court'],
-            images=[Image(src='image2.jpg', alt='Image 2')]
+            tags=['hukum', 'court']
         )
     ]
     

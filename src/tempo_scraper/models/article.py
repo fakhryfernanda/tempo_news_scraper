@@ -5,12 +5,6 @@ from typing import List, Optional, Dict, Any
 from datetime import datetime
 
 @dataclass
-class Image:
-    """Represents an image in an article."""
-    src: str
-    alt: str
-
-@dataclass
 class ArticleMetadata:
     """Metadata for an article."""
     url: str
@@ -29,7 +23,6 @@ class Article:
     metadata: ArticleMetadata
     content: List[str]
     tags: List[str]
-    images: List[Image]
 
 @dataclass
 class ScrapingOptions:

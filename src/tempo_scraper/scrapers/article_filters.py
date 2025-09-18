@@ -49,8 +49,7 @@ def extract_content_for_articles(articles: List[ArticleMetadata], use_auth: bool
             empty_article = Article(
                 metadata=article_meta,
                 content=["[Content not available: Non-free article and no authentication provided]"],
-                tags=[],
-                images=[]
+                tags=[]
             )
             articles_with_content.append(empty_article)
             continue
@@ -66,8 +65,7 @@ def extract_content_for_articles(articles: List[ArticleMetadata], use_auth: bool
             empty_article = Article(
                 metadata=article_meta,
                 content=["[Content not available: Article structure not found (likely photo/video archive)]"],
-                tags=[],
-                images=[]
+                tags=[]
             )
             articles_with_content.append(empty_article)
     
