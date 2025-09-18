@@ -3,6 +3,7 @@
 from typing import List
 from ..models.article import ArticleMetadata, Article
 from ..extractors.article_extractor import extract_article_content
+from ..core.logging import logger
 
 def filter_articles_by_access(articles: List[ArticleMetadata]) -> List[ArticleMetadata]:
     """
@@ -31,7 +32,7 @@ def extract_content_for_articles(articles: List[ArticleMetadata]) -> List[Articl
     articles_with_content = []
     
     for i, article_meta in enumerate(articles, 1):
-        print(f"  Extracting content for article {i}/{len(articles)}: {article_meta.url}")
+        logger.info(f"Extracting content for article {i}/{len(articles)}: {article_meta.url}")
         
         # Convert relative URLs to absolute URLs
         if article_meta.url.startswith('/'):
@@ -42,7 +43,7 @@ def extract_content_for_articles(articles: List[ArticleMetadata]) -> List[Articl
         # Check if article is free (authentication is no longer supported)
         if not article_meta.is_free:
             # Non-free article without authentication
-            print(f"    Article is not free and no authentication provided: {article_meta.url}")
+            logger.info(f"  Article is not free and no authentication provided: {article_meta.url}")
             # Create article with empty content and reason
             empty_article = Article(
                 metadata=article_meta,
@@ -58,7 +59,7 @@ def extract_content_for_articles(articles: List[ArticleMetadata]) -> List[Articl
             articles_with_content.append(article)
         else:
             # Failed to extract content (likely photo/video archive)
-            print(f"    Failed to extract content (likely photo/video archive): {article_meta.url}")
+            logger.info(f"  Failed to extract content (likely photo/video archive): {article_meta.url}")
             # Create article with empty content and reason
             empty_article = Article(
                 metadata=article_meta,

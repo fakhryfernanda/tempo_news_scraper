@@ -1,7 +1,10 @@
 """Validation utilities for Tempo.co scraper."""
 
+import logging
 from datetime import datetime, timedelta
 from typing import Tuple, Optional
+
+logger = logging.getLogger('tempo_scraper')
 
 def validate_date_format(date_str: str, date_type: str) -> bool:
     """
@@ -19,7 +22,7 @@ def validate_date_format(date_str: str, date_type: str) -> bool:
             datetime.strptime(date_str, '%Y-%m-%d')
             return True
         except ValueError:
-            print(f"Error: {date_type} must be in YYYY-MM-DD format")
+            logger.error(f"Error: {date_type} must be in YYYY-MM-DD format")
             return False
     return True
 
@@ -39,7 +42,7 @@ def validate_date_range(start_date: str, end_date: str) -> bool:
         end_dt = datetime.strptime(end_date, '%Y-%m-%d')
         
         if start_dt > end_dt:
-            print("Error: start-date cannot be later than end-date")
+            logger.error("Error: start-date cannot be later than end-date")
             return False
     return True
 
@@ -55,8 +58,8 @@ def validate_page_range(start_page: int, end_page: int) -> bool:
         True if valid, False otherwise
     """
     if end_page - start_page > 50:
-        print("Warning: You're trying to scrape more than 50 pages.")
-        print("Please limit your scraping to be respectful to the server.")
+        logger.warning("Warning: You're trying to scrape more than 50 pages.")
+        logger.warning("Please limit your scraping to be respectful to the server.")
         return False
     return True
 

@@ -17,6 +17,7 @@ from .utils.url_builder import build_index_url
 from .utils.validators import validate_date_format, validate_date_range, validate_page_range, process_dates
 from .utils.file_handler import save_articles_to_json
 from .models.article import Article, ArticleMetadata, ScrapingOptions
+from .core.logging import logger
 
 def scrape_index_pages(options: ScrapingOptions) -> str:
     """
@@ -65,7 +66,7 @@ def scrape_index_pages(options: ScrapingOptions) -> str:
         
         # Add delay between requests (except for the last page)
         if page < options.end_page:
-            print(f"Waiting {options.delay} seconds before next request...")
+            logger.info(f"Waiting {options.delay} seconds before next request...")
             time.sleep(options.delay)
     
     # Prepare scraping options for metadata
@@ -106,7 +107,7 @@ def extract_single_article(url: str) -> str:
     article = extract_article_content(url)
     
     if not article:
-        print("Failed to extract article content")
+        logger.error("Failed to extract article content")
         sys.exit(1)
     
     # Save to JSON file
@@ -176,12 +177,12 @@ def main():
         
         # Run index scraper
         output_file = scrape_index_pages(options)
-        print(f"Index scraping completed. Output saved to: {output_file}")
+        logger.info(f"Index scraping completed. Output saved to: {output_file}")
         
     elif args.command == 'article':
         # Run article extractor
         output_file = extract_single_article(args.url)
-        print(f"Article extraction completed. Output saved to: {output_file}")
+        logger.info(f"Article extraction completed. Output saved to: {output_file}")
         
     else:
         parser.print_help()

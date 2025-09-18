@@ -1,10 +1,13 @@
 """File handling utilities for Tempo.co scraper."""
 
+import logging
 import json
 import os
 from datetime import datetime
 from typing import List, Dict, Any
 from ..models.article import Article
+
+logger = logging.getLogger('tempo_scraper')
 
 def save_articles_to_json(
     articles: List[Article],
@@ -131,8 +134,8 @@ def save_articles_to_json(
         with open(output_file, 'w', encoding='utf-8') as f:
             json.dump(output_data, f, ensure_ascii=False, indent=2, default=lambda o: o.__dict__)
         
-        print(f"Successfully saved {len(articles)} articles to {output_file}")
+        logger.info(f"Successfully saved {len(articles)} articles to {output_file}")
         return output_file
     except Exception as e:
-        print(f"Error saving to JSON file: {e}")
+        logger.error(f"Error saving to JSON file: {e}")
         raise

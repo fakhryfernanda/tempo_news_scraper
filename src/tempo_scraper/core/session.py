@@ -19,6 +19,4 @@ def create_session(use_auth: bool = False) -> requests.Session:
     # Set default headers
     session.headers.update(HEADERS)
     
-    logger.info("Using anonymous session")
-    
     return session
