@@ -34,6 +34,13 @@ def scrape_index_page(
         
         # Send GET request
         response = session.get(url, headers=HEADERS)
+        
+        # Check for 429 status code
+        if response.status_code == 429:
+            logger.warning(f"Received 429 Too Many Requests for page {page_num}. Retrying with exponential backoff...")
+            # Use the session's retry mechanism
+            response.raise_for_status()
+        
         response.raise_for_status()
         
         # Parse HTML content
