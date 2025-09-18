@@ -166,7 +166,6 @@ python tests/test_non_free_filtering.py
 6. **Flexible Filtering**: Support for page range, date range, and article count filtering
 7. **JSON Output**: Structured JSON output for easy data processing
 8. **Categorized Output**: Articles can be saved in separate files by category
-9. **Authentication Support**: Can use REMP session ID for accessing premium content
 
 ## Output Files
 
@@ -179,4 +178,4 @@ All output files are saved in the `data/output/` directory:
 
 ## Limitations with Premium Content Access
 
-Despite using authentication with a valid REMP_SESSION_ID, some premium content may still be inaccessible due to server-side paywalls. In such cases, only article metadata and a preview of the content may be available, with the full article content remaining behind a subscription paywall. This is a limitation of the website's architecture and not an issue with the scraper itself.
+Despite the scraper's capabilities, some premium content may still be inaccessible due to server-side paywalls. In such cases, only article metadata and a preview of the content may be available, with the full article content remaining behind a subscription paywall. This is a limitation of the website's architecture and not an issue with the scraper itself.

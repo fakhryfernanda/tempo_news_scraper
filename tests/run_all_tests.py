@@ -46,8 +46,7 @@ def main():
         ("tests/test_comprehensive.py", "Comprehensive Unit Tests"),
         ("tests/test_integration.py", "Integration Tests"),
         ("tests/test_article_extractor.py", "Article Extractor Unit Tests"),
-        ("tests/test_categorization.py", "Categorization Feature Tests"),
-        ("tests/test_auth_limitation.py", "Authentication Limitation Documentation Tests")
+        ("tests/test_categorization.py", "Categorization Feature Tests")
     ]
     
     passed = 0

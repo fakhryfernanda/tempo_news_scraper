@@ -151,9 +151,6 @@ data/output/
 # Environment files
 .env
 
-# Documentation file about authentication limitations
-AUTH_LIMITATIONS.md
-
 # Vim swap files
 *.swp
 *.swo

@@ -22,7 +22,6 @@ def scrape_index_page(
         url: URL of the index page to scrape
         page_num: Page number (for logging)
         article_per_page: Maximum number of articles to extract per page
-        use_auth: Whether to use authentication
         
     Returns:
         List of article metadata

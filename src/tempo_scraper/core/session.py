@@ -4,13 +4,10 @@ import requests
 from .selectors import HEADERS
 from .logging import logger
 
-def create_session(use_auth: bool = False) -> requests.Session:
+def create_session() -> requests.Session:
     """
     Create a requests session.
     
-    Args:
-        use_auth: Whether to use authentication (ignored, always uses anonymous session)
-        
     Returns:
         Configured requests session
     """
