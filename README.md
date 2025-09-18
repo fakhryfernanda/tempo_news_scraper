@@ -15,7 +15,6 @@ A Python-based web scraper for the Indonesian news website [tempo.co](https://ww
 - Skip extraction for non-free articles (`is_free=false`)
 - Prevent duplicate JSON exports when running from index scraper
 - Save data in structured JSON format
-- **Authentication support** for accessing premium content (Subscribed users)
 
 ## Project Structure
 
@@ -113,12 +112,10 @@ python -m src.tempo_scraper article --url https://www.tempo.co/article-url
 - `--article-per-page ARTICLE_PER_PAGE`: Number of articles per page (default: 20)
 - `--extract-content`: Extract full content for each article (default: False)
 - `--rubric RUBRIC`: Filter articles by rubric (default: None)
-- `--login`: Use authentication for premium content access (default: False)
 - `--categorize`: Categorize articles by category in output (default: False)
 
 #### Article Extractor Options
 - `--url URL`: URL of the article to extract (required)
-- `--login`: Use authentication for premium content access (default: False)
 
 ### Date Handling
 
@@ -151,6 +148,15 @@ python -m src.tempo_scraper indeks --start-date 2025-09-10
 
 # Scrape and extract full content for all articles found (skips non-free articles, no duplicate exports)
 python -m src.tempo_scraper indeks --start-page 1 --end-page 1 --extract-content
+
+# Scrape and categorize articles by category
+python -m src.tempo_scraper indeks --start-page 1 --end-page 3 --categorize
+
+# Count total articles and pages without extracting content (much faster)
+./scripts/count_articles.sh
+
+# Count articles in a specific date range
+./scripts/count_articles.sh 2025-09-01 2025-09-15
 
 # Extract content from a specific article (creates individual JSON file)
 python -m src.tempo_scraper article --url "https://www.tempo.co/teroka/synchronize-fest-2025-bakal-ada-guruh-gipsy-dan-elvy-sukaesih--2069043"
@@ -203,11 +209,9 @@ The scraper now includes enhanced filtering capabilities:
 
 ### Access-Based Filtering
 - **Anonymous mode** (default): Only free articles are processed
-- **Authenticated mode** (`--login`): All articles (including premium content) are processed
 
 ### Content Extraction
 - Use `--extract-content` to extract full article content
-- When combined with `--login`, premium content is accessible
 - Non-free articles are automatically skipped in anonymous mode
 
 ### Filter Options
@@ -215,64 +219,11 @@ The scraper now includes enhanced filtering capabilities:
 - `--start-date` / `--end-date`: Filter articles by date range
 - `--article-per-page`: Limit number of articles per page
 
-## Authentication (Premium Content Access)
+## Usage Examples
 
-Subscribed users can access premium content by setting their REMP session ID in a `.env` file:
+### Basic Index Scraping
 
-### Getting Your REMP_SESSION_ID
 
-1. Login to [tempo.co](https://tempo.co) in your browser
-2. Open Developer Tools (F12 or Ctrl+Shift+I)
-3. Go to the Application/Storage tab
-4. Find Cookies for "https://tempo.co"
-5. Look for `remp_session_id` cookie
-6. Copy the value
-
-### Setting REMP_SESSION_ID
-
-Create a `.env` file in the project root directory with your REMP session ID:
-
-```bash
-echo "REMP_SESSION_ID=your-remp-session-id-here" > .env
-```
-
-Or manually create a `.env` file with the following content:
-```
-REMP_SESSION_ID=your-remp-session-id-here
-```
-
-### Checking Your Login Status
-
-You can verify if your REMP_SESSION_ID is properly configured:
-
-```bash
-# Check .env file and test authentication with tempo.co
-python scripts/auth_check.py
-```
-
-### Using Authentication
-
-By default, the scraper runs in anonymous mode. To access premium content, use the `--login` flag:
-
-```bash
-# Index scraper with authentication
-python -m src.tempo_scraper indeks --login
-
-# Article extractor with authentication
-python -m src.tempo_scraper article --url https://www.tempo.co/article-url --login
-```
-
-The REMP_SESSION_ID will be automatically loaded from the `.env` file when `--login` is used, allowing access to premium content.
-
-**Note**: Session IDs may expire and require periodic renewal.
-
-### Limitations with Premium Content Access
-
-Despite using authentication with a valid REMP_SESSION_ID, some premium content may still be inaccessible due to server-side paywalls. In such cases, only article metadata and a preview of the content may be available, with the full article content remaining behind a subscription paywall. This is a limitation of the website's architecture and not an issue with the scraper itself.
-
-For more details about this limitation, see:
-- [AUTH_LIMITATIONS.md](AUTH_LIMITATIONS.md) - Detailed documentation of authentication limitations
-- [scripts/auth_limitation_demo.py](scripts/auth_limitation_demo.py) - Script to demonstrate the limitation
 
 ## Requirements
 

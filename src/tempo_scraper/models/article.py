@@ -35,7 +35,6 @@ class ScrapingOptions:
     article_per_page: int = 20
     extract_content: bool = False
     rubric: Optional[str] = None
-    use_auth: bool = False
     categorize: bool = False
 
 @dataclass

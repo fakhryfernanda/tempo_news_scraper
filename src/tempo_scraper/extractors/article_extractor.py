@@ -10,13 +10,12 @@ from ..core.selectors import ARTICLE_SELECTORS, HEADERS
 from ..models.article import Article, ArticleMetadata
 from ..utils.date_parser import parse_publication_datetime
 
-def extract_article_content(url: str, use_auth: bool = False) -> Optional[Article]:
+def extract_article_content(url: str) -> Optional[Article]:
     """
     Extract article content from a Tempo.co article page.
     
     Args:
         url: URL of the article to extract
-        use_auth: Whether to use authentication for premium content
         
     Returns:
         Article object with extracted content, or None if extraction fails
@@ -25,7 +24,7 @@ def extract_article_content(url: str, use_auth: bool = False) -> Optional[Articl
     
     try:
         # Create session
-        session = create_session(use_auth)
+        session = create_session()
         
         # Send GET request with headers
         response = session.get(url, headers=HEADERS)

@@ -13,8 +13,7 @@ from ..models.article import ArticleMetadata
 def scrape_index_page(
     url: str,
     page_num: int,
-    article_per_page: int = 20,
-    use_auth: bool = False
+    article_per_page: int = 20
 ) -> List[ArticleMetadata]:
     """
     Scrape a single index page and return article metadata.
@@ -32,7 +31,7 @@ def scrape_index_page(
     
     try:
         # Create session
-        session = create_session(use_auth)
+        session = create_session()
         
         # Send GET request
         response = session.get(url, headers=HEADERS)

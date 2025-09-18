@@ -4,28 +4,26 @@ from typing import List
 from ..models.article import ArticleMetadata, Article
 from ..extractors.article_extractor import extract_article_content
 
-def filter_articles_by_access(articles: List[ArticleMetadata], use_auth: bool) -> List[ArticleMetadata]:
+def filter_articles_by_access(articles: List[ArticleMetadata]) -> List[ArticleMetadata]:
     """
     Filter articles based on access rights.
     
     Args:
         articles: List of article metadata
-        use_auth: Whether authentication is being used
         
     Returns:
-        Filtered list of articles
+        Filtered list of article metadata
     """
     # The index scraper should list all articles (free and non-free)
     # Only the article extractor should skip non-free articles
     return articles
 
-def extract_content_for_articles(articles: List[ArticleMetadata], use_auth: bool) -> List[Article]:
+def extract_content_for_articles(articles: List[ArticleMetadata]) -> List[Article]:
     """
     Extract full content for a list of articles.
     
     Args:
         articles: List of article metadata
-        use_auth: Whether to use authentication for premium content
         
     Returns:
         List of articles with full content
@@ -41,8 +39,8 @@ def extract_content_for_articles(articles: List[ArticleMetadata], use_auth: bool
         else:
             full_url = article_meta.url
             
-        # Check if article is free or if we're using authentication
-        if not article_meta.is_free and not use_auth:
+        # Check if article is free (authentication is no longer supported)
+        if not article_meta.is_free:
             # Non-free article without authentication
             print(f"    Article is not free and no authentication provided: {article_meta.url}")
             # Create article with empty content and reason
@@ -55,7 +53,7 @@ def extract_content_for_articles(articles: List[ArticleMetadata], use_auth: bool
             continue
             
         # Extract full content
-        article = extract_article_content(full_url, use_auth)
+        article = extract_article_content(full_url)
         if article:
             articles_with_content.append(article)
         else:

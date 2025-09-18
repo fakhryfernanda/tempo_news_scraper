@@ -43,14 +43,14 @@ def scrape_index_pages(options: ScrapingOptions) -> str:
         url = build_index_url(page, options.start_date, options.end_date, options.rubric)
         
         # Scrape the page
-        articles = scrape_index_page(url, page, options.article_per_page, options.use_auth)
+        articles = scrape_index_page(url, page, options.article_per_page)
         
         # Filter articles based on access rights
-        filtered_articles = filter_articles_by_access(articles, options.use_auth)
+        filtered_articles = filter_articles_by_access(articles)
         
         # If extract_content is True, extract full content for each article
         if options.extract_content:
-            articles_with_content = extract_content_for_articles(filtered_articles, options.use_auth)
+            articles_with_content = extract_content_for_articles(filtered_articles)
             all_articles.extend(articles_with_content)
         else:
             # Convert ArticleMetadata to Article objects (without content)
@@ -71,7 +71,6 @@ def scrape_index_pages(options: ScrapingOptions) -> str:
     # Prepare scraping options for metadata
     scraping_options = {
         "extract_content": options.extract_content,
-        "use_auth": options.use_auth,
         "start_page": options.start_page,
         "end_page": options.end_page,
         "start_date": options.start_date or "",
@@ -93,19 +92,18 @@ def scrape_index_pages(options: ScrapingOptions) -> str:
     
     return output_file
 
-def extract_single_article(url: str, use_auth: bool) -> str:
+def extract_single_article(url: str) -> str:
     """
     Extract content from a single article.
     
     Args:
         url: URL of the article to extract
-        use_auth: Whether to use authentication
         
     Returns:
         Path to the saved output file
     """
     # Extract article content
-    article = extract_article_content(url, use_auth)
+    article = extract_article_content(url)
     
     if not article:
         print("Failed to extract article content")
@@ -128,21 +126,21 @@ def main():
     
     # Subparser for index scraper
     index_parser = subparsers.add_parser('indeks', help='Scrape article index pages')
+    
+    # Add arguments for index scraper
     index_parser.add_argument("--start-page", type=int, default=1, help="Starting page number (default: 1)")
     index_parser.add_argument("--end-page", type=int, default=3, help="Ending page number (default: 3)")
     index_parser.add_argument("--delay", type=int, default=1, help="Delay between requests in seconds (default: 1)")
-    index_parser.add_argument("--start-date", type=str, default=None, help="Start date in YYYY-MM-DD format (default: None)")
-    index_parser.add_argument("--end-date", type=str, default=None, help="End date in YYYY-MM-DD format (default: None)")
+    index_parser.add_argument("--start-date", help="Start date in YYYY-MM-DD format (default: None)")
+    index_parser.add_argument("--end-date", help="End date in YYYY-MM-DD format (default: None)")
     index_parser.add_argument("--article-per-page", type=int, default=20, help="Number of articles per page (default: 20)")
     index_parser.add_argument("--extract-content", action="store_true", help="Extract full content for each article (default: False)")
-    index_parser.add_argument("--rubric", type=str, default=None, help="Rubric to filter by (default: None)")
-    index_parser.add_argument("--login", action="store_true", help="Use authentication for premium content access (default: False)")
+    index_parser.add_argument("--rubric", help="Rubric to filter by (default: None)")
     index_parser.add_argument("--categorize", action="store_true", help="Categorize articles by category (default: False)")
     
     # Subparser for article extractor
     article_parser = subparsers.add_parser('article', help='Extract content from a single article')
     article_parser.add_argument("--url", type=str, required=True, help="URL of the article to extract")
-    article_parser.add_argument("--login", action="store_true", help="Use authentication for premium content access (default: False)")
     
     # If no arguments provided, show help
     if len(sys.argv) == 1:
@@ -173,7 +171,6 @@ def main():
             article_per_page=args.article_per_page,
             extract_content=args.extract_content,
             rubric=args.rubric,
-            use_auth=args.login,
             categorize=args.categorize
         )
         
@@ -183,7 +180,7 @@ def main():
         
     elif args.command == 'article':
         # Run article extractor
-        output_file = extract_single_article(args.url, args.login)
+        output_file = extract_single_article(args.url)
         print(f"Article extraction completed. Output saved to: {output_file}")
         
     else:
