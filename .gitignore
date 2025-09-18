@@ -144,6 +144,7 @@ Thumbs.db
 # Project specific ignores
 # Output data files
 data/output/
+data/saved
 
 # JSON files (except for package.json if it existed)
 *.json

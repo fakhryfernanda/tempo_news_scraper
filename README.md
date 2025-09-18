@@ -34,6 +34,8 @@ tempo/
 │       └── utils/          # Utility modules
 ├── tests/                 # Test files
 ├── scripts/               # Helper scripts
+│   ├── json_to_markdown.py # JSON to Markdown converter
+│   └── run_index_scraper.sh
 ├── AGENTS.md
 ├── README.md
 └── requirements.txt
@@ -235,6 +237,38 @@ The scraper now includes enhanced filtering capabilities:
 - lxml
 
 See `requirements.txt` for detailed dependencies.
+
+## JSON to Markdown Converter
+
+The project includes a utility script to convert scraped JSON articles to Markdown format:
+
+```bash
+python scripts/json_to_markdown.py <input_directory> <output_directory>
+```
+
+### Features
+
+- Converts articles to Markdown format with proper metadata
+- Organizes output by category in separate directories
+- Sanitizes filenames for cross-platform compatibility
+- Adds tempo.co domain to premium article URLs
+- Handles duplicate filenames by adding counters
+- Preserves article content formatting with proper spacing
+
+### Example
+
+```bash
+python scripts/json_to_markdown.py data/saved/berita_16_september_2025 data/output/markdown
+```
+
+This will convert all JSON files in the input directory to Markdown files in the output directory, organized by category.
+
+### Special Handling
+
+- Premium articles (where `is_free` is `false`) have the tempo.co domain prepended to their URLs
+- Free articles (where `is_free` is `true`) retain their original URLs
+- Filenames are sanitized to be filesystem-safe
+- Duplicate filenames are handled by adding counters (e.g., `article.md`, `article-1.md`, `article-2.md`)
 
 ## Valid Rubrics
 
