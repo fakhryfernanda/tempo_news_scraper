@@ -112,9 +112,11 @@ python -m src.tempo_scraper article --url https://www.tempo.co/article-url
 - `--extract-content`: Extract full content for each article (default: False)
 - `--rubric RUBRIC`: Filter articles by rubric (default: None)
 - `--categorize`: Categorize articles by category in separate files (default: False)
+- `--output-name OUTPUT_NAME`: Custom output name (without extension) (default: auto-generated)
 
 #### Article Extractor Options
 - `--url URL`: URL of the article to extract (required)
+- `--output-name OUTPUT_NAME`: Custom output name (without extension) (default: auto-generated)
 
 ### Date Handling
 
@@ -134,10 +136,15 @@ The scraper automatically filters out:
 
 All output files are saved in the `data/output/` directory:
 - Index scraping results: `indeks_{timestamp}.json` (when not using categorization)
+- Index scraping results with custom name: `{custom_name}.json` (when `--output-name` is provided)
 - Index scraping results with categorization: `indeks_{timestamp}/` directory containing:
   - `{category}.json` files for each article category
   - `metadata.json` with scraping information
+- Index scraping results with categorization and custom name: `{custom_name}/` directory containing:
+  - `{category}.json` files for each article category
+  - `metadata.json` with scraping information
 - Individual articles: `article_{timestamp}.json` (only when using standalone article extractor)
+- Individual articles with custom name: `{custom_name}.json` (when `--output-name` is provided for article extraction)
 
 ## Examples
 
@@ -157,14 +164,14 @@ python -m src.tempo_scraper indeks --start-page 1 --end-page 3 --categorize
 # Scrape and categorize articles with full content extraction
 python -m src.tempo_scraper indeks --start-page 1 --end-page 3 --categorize --extract-content
 
+# Scrape with a custom output name
+python -m src.tempo_scraper indeks --start-page 1 --end-page 1 --output-name my_scraped_articles
+
+# Extract content from a specific article with a custom output name
+python -m src.tempo_scraper article --url "https://www.tempo.co/teroka/synchronize-fest-2025-bakal-ada-guruh-gipsy-dan-elvy-sukaesih--2069043" --output-name my_article
+
 # Count total articles and pages without extracting content (much faster)
 ./scripts/count_articles.sh
-
-# Count articles in a specific date range
-./scripts/count_articles.sh 2025-09-01 2025-09-15
-
-# Extract content from a specific article (creates individual JSON file)
-python -m src.tempo_scraper article --url "https://www.tempo.co/teroka/synchronize-fest-2025-bakal-ada-guruh-gipsy-dan-elvy-sukaesih--2069043"
 ```
 
 ## Testing

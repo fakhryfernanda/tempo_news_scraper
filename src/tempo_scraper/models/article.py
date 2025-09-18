@@ -36,6 +36,7 @@ class ScrapingOptions:
     extract_content: bool = False
     rubric: Optional[str] = None
     categorize: bool = False
+    output_name: Optional[str] = None
 
 @dataclass
 class ScrapingResult:

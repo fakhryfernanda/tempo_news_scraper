@@ -4,7 +4,7 @@ import logging
 import json
 import os
 from datetime import datetime
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from ..models.article import Article
 
 logger = logging.getLogger('tempo_scraper')
@@ -15,7 +15,8 @@ def save_categorized_articles_to_files(
     filename_timestamp: str,
     metadata_timestamp: str,
     scraping_options: Dict[str, Any] = None,
-    extract_content: bool = False
+    extract_content: bool = False,
+    output_filename: Optional[str] = None
 ) -> str:
     """
     Save categorized articles to separate files in a timestamped directory.
@@ -27,12 +28,16 @@ def save_categorized_articles_to_files(
         metadata_timestamp: Timestamp for metadata
         scraping_options: Options used for scraping
         extract_content: Whether full content was extracted
+        output_filename: Custom output name (without extension) (default: None)
         
     Returns:
         Path to the created directory
     """
-    # Create the timestamped directory
-    category_dir = os.path.join(output_dir, f"indeks_{filename_timestamp}")
+    # Create the directory with custom name or timestamped name
+    if output_filename:
+        category_dir = os.path.join(output_dir, output_filename)
+    else:
+        category_dir = os.path.join(output_dir, f"indeks_{filename_timestamp}")
     os.makedirs(category_dir, exist_ok=True)
     
     # Categorize articles
@@ -100,7 +105,8 @@ def save_articles_to_json(
     output_dir: str,
     is_index_scraping: bool = True,
     scraping_options: Dict[str, Any] = None,
-    categorize: bool = False
+    categorize: bool = False,
+    output_filename: Optional[str] = None
 ) -> str:
     """
     Save articles data to a JSON file with timestamp-based naming.
@@ -111,6 +117,7 @@ def save_articles_to_json(
         is_index_scraping: Whether this is index scraping or single article extraction
         scraping_options: Options used for scraping
         categorize: Whether to categorize articles by category
+        output_filename: Custom output name (without extension) (default: None)
         
     Returns:
         Path to the saved file or directory
@@ -132,16 +139,23 @@ def save_articles_to_json(
             filename_timestamp, 
             metadata_timestamp, 
             scraping_options, 
-            extract_content
+            extract_content,
+            output_filename
         )
     
-    # Create filename with timestamp
-    if is_index_scraping:
-        output_filename = f"indeks_{filename_timestamp}.json"
+    # Create filename with timestamp or custom name
+    if output_filename:
+        # Use custom filename, ensuring it has .json extension
+        if not output_filename.endswith('.json'):
+            output_filename = f"{output_filename}.json"
+        output_file = os.path.join(output_dir, output_filename)
     else:
-        output_filename = f"article_{filename_timestamp}.json"
-    
-    output_file = os.path.join(output_dir, output_filename)
+        # Generate filename with timestamp (current behavior)
+        if is_index_scraping:
+            output_filename = f"indeks_{filename_timestamp}.json"
+        else:
+            output_filename = f"article_{filename_timestamp}.json"
+        output_file = os.path.join(output_dir, output_filename)
     
     if is_index_scraping:
         # Index scraping - include filter info

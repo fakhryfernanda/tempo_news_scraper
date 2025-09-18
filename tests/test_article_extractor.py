@@ -39,7 +39,7 @@ def test_logo_filtering():
     
     # Test the file handler with the new structure
     try:
-        save_articles_to_json([article], '/home/fakhry/dev/scraper/tempo/data/output', False)
+        save_articles_to_json([article], '/home/fakhry/dev/scraper/tempo/data/output', False, output_filename=None)
         print("✓ Logo filtering test passed")
         # Clean up
         files = glob.glob('/home/fakhry/dev/scraper/tempo/data/output/test_article.json')

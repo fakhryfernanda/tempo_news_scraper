@@ -58,7 +58,8 @@ def test_categorization_disabled():
             articles, 
             temp_dir, 
             is_index_scraping=True,
-            scraping_options={"extract_content": False}
+            scraping_options={"extract_content": False},
+            output_filename=None
         )
         
         # Read the output file
@@ -131,7 +132,8 @@ def test_categorization_enabled():
             temp_dir, 
             is_index_scraping=True,
             scraping_options={"extract_content": False},
-            categorize=True
+            categorize=True,
+            output_filename=None
         )
         
         # Check that a directory was returned
@@ -212,7 +214,8 @@ def test_categorization_with_full_content():
             temp_dir, 
             is_index_scraping=True,
             scraping_options={"extract_content": True},
-            categorize=True
+            categorize=True,
+            output_filename=None
         )
         
         # Check that a directory was returned

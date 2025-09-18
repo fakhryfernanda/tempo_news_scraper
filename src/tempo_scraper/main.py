@@ -88,17 +88,19 @@ def scrape_index_pages(options: ScrapingOptions) -> str:
         output_dir, 
         is_index_scraping=True,
         scraping_options=scraping_options,
-        categorize=options.categorize
+        categorize=options.categorize,
+        output_filename=options.output_name
     )
     
     return output_file
 
-def extract_single_article(url: str) -> str:
+def extract_single_article(url: str, output_name: Optional[str] = None) -> str:
     """
     Extract content from a single article.
     
     Args:
         url: URL of the article to extract
+        output_name: Custom output name (without extension) (default: None)
         
     Returns:
         Path to the saved output file
@@ -115,7 +117,8 @@ def extract_single_article(url: str) -> str:
     output_file = save_articles_to_json(
         [article], 
         output_dir, 
-        is_index_scraping=False
+        is_index_scraping=False,
+        output_filename=output_name
     )
     
     return output_file
@@ -138,10 +141,12 @@ def main():
     index_parser.add_argument("--extract-content", action="store_true", help="Extract full content for each article (default: False)")
     index_parser.add_argument("--rubric", help="Rubric to filter by (default: None)")
     index_parser.add_argument("--categorize", action="store_true", help="Categorize articles by category (default: False)")
+    index_parser.add_argument("--output-name", help="Custom output name (without extension) (default: auto-generated)")
     
     # Subparser for article extractor
     article_parser = subparsers.add_parser('article', help='Extract content from a single article')
     article_parser.add_argument("--url", type=str, required=True, help="URL of the article to extract")
+    article_parser.add_argument("--output-name", help="Custom output name (without extension) (default: auto-generated)")
     
     # If no arguments provided, show help
     if len(sys.argv) == 1:
@@ -172,7 +177,8 @@ def main():
             article_per_page=args.article_per_page,
             extract_content=args.extract_content,
             rubric=args.rubric,
-            categorize=args.categorize
+            categorize=args.categorize,
+            output_name=args.output_name
         )
         
         # Run index scraper
@@ -181,7 +187,7 @@ def main():
         
     elif args.command == 'article':
         # Run article extractor
-        output_file = extract_single_article(args.url)
+        output_file = extract_single_article(args.url, args.output_name)
         logger.info(f"Article extraction completed. Output saved to: {output_file}")
         
     else:
