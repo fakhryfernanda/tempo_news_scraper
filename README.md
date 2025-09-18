@@ -15,6 +15,7 @@ A Python-based web scraper for the Indonesian news website [tempo.co](https://ww
 - Skip extraction for non-free articles (`is_free=false`)
 - Prevent duplicate JSON exports when running from index scraper
 - Save data in structured JSON format
+- Categorize articles by category with separate output files per category
 
 ## Project Structure
 
@@ -26,15 +27,13 @@ tempo/
 │   └── tempo_scraper/     # Main package directory
 │       ├── __init__.py
 │       ├── __main__.py
-│       ├── article_extractor.py
-│       ├── article_filters.py
-│       ├── file_handler.py
-│       ├── indeks_scraper.py
-│       ├── main.py
-│       ├── scraper.py
-│       ├── url_builder.py
-│       └── validator.py
+│       ├── core/           # Core utilities (config, logging, etc.)
+│       ├── extractors/     # Content extraction modules
+│       ├── models/         # Data models
+│       ├── scrapers/       # Main scraping logic
+│       └── utils/          # Utility modules
 ├── tests/                 # Test files
+├── scripts/               # Helper scripts
 ├── AGENTS.md
 ├── README.md
 └── requirements.txt
@@ -101,8 +100,6 @@ python -m src.tempo_scraper article --url https://www.tempo.co/article-url
 
 ### Command Line Options
 
-### Command Line Options
-
 #### Index Scraper Options
 - `--start-page START_PAGE`: Starting page number (default: 1)
 - `--end-page END_PAGE`: Ending page number (default: 3)
@@ -112,7 +109,7 @@ python -m src.tempo_scraper article --url https://www.tempo.co/article-url
 - `--article-per-page ARTICLE_PER_PAGE`: Number of articles per page (default: 20)
 - `--extract-content`: Extract full content for each article (default: False)
 - `--rubric RUBRIC`: Filter articles by rubric (default: None)
-- `--categorize`: Categorize articles by category in output (default: False)
+- `--categorize`: Categorize articles by category in separate files (default: False)
 
 #### Article Extractor Options
 - `--url URL`: URL of the article to extract (required)
@@ -134,8 +131,11 @@ The scraper automatically filters out:
 ### Output
 
 All output files are saved in the `data/output/` directory:
-- Index scraping results: `articles_{start_page}_{end_page}[_{start_date}_to_{end_date}].json`
-- Individual articles: `article_{category}_{article-title}.json` (only when using standalone article extractor)
+- Index scraping results: `indeks_{timestamp}.json` (when not using categorization)
+- Index scraping results with categorization: `indeks_{timestamp}/` directory containing:
+  - `{category}.json` files for each article category
+  - `metadata.json` with scraping information
+- Individual articles: `article_{timestamp}.json` (only when using standalone article extractor)
 
 ## Examples
 
@@ -149,8 +149,11 @@ python -m src.tempo_scraper indeks --start-date 2025-09-10
 # Scrape and extract full content for all articles found (skips non-free articles, no duplicate exports)
 python -m src.tempo_scraper indeks --start-page 1 --end-page 1 --extract-content
 
-# Scrape and categorize articles by category
+# Scrape and categorize articles by category in separate files
 python -m src.tempo_scraper indeks --start-page 1 --end-page 3 --categorize
+
+# Scrape and categorize articles with full content extraction
+python -m src.tempo_scraper indeks --start-page 1 --end-page 3 --categorize --extract-content
 
 # Count total articles and pages without extracting content (much faster)
 ./scripts/count_articles.sh
@@ -182,14 +185,12 @@ python tests/test_non_free_filtering.py # Non-free article filtering tests
 
 ### Code Structure
 
-- **indeks_scraper.py**: Main index scraping functionality
-- **article_extractor.py**: Article content extraction
-- **url_builder.py**: URL construction with intelligent date handling
-- **validator.py**: Input validation and processing
-- **scraper.py**: Core HTML parsing for index pages
-- **file_handler.py**: JSON file saving functionality
-- **article_filters.py**: Additional filtering capabilities
 - **main.py**: Command-line interface entry point
+- **core/**: Core utilities (config, logging, etc.)
+- **extractors/**: Content extraction modules
+- **models/**: Data models
+- **scrapers/**: Main scraping logic
+- **utils/**: Utility modules
 
 ### Key Features
 
@@ -202,6 +203,7 @@ python tests/test_non_free_filtering.py # Non-free article filtering tests
 4. **Content Extraction**: Option to automatically extract full content during index scraping
 5. **Flexible Filtering**: Support for page range, date range, and article count filtering
 6. **Structured Output**: Data saved in consistent JSON format for easy processing
+7. **Categorized Output**: Articles can be saved in separate files by category
 
 ## Article Filtering
 

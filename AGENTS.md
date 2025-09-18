@@ -19,14 +19,11 @@ tempo/
 │   └── tempo_scraper/     # Main package directory
 │       ├── __init__.py
 │       ├── __main__.py
-│       ├── article_extractor.py
-│       ├── article_filters.py
-│       ├── file_handler.py
-│       ├── indeks_scraper.py
-│       ├── main.py
-│       ├── scraper.py
-│       ├── url_builder.py
-│       └── validator.py
+│       ├── core/           # Core utilities (config, logging, etc.)
+│       ├── extractors/     # Content extraction modules
+│       ├── models/         # Data models
+│       ├── scrapers/       # Main scraping logic
+│       └── utils/          # Utility modules
 ├── tests/                 # Test files
 │   ├── test_comprehensive.py
 │   ├── test_integration.py
@@ -35,6 +32,7 @@ tempo/
 │   ├── test_non_free_filtering.py
 │   ├── run_all_tests.py
 │   └── README.md
+├── scripts/               # Helper scripts
 ├── AGENTS.md
 ├── README.md
 └── requirements.txt
@@ -81,9 +79,10 @@ tempo/
 - Extracts article metadata from index pages
 - Identifies free vs non-free articles
 
-### File Handler Module (`src/tempo_scraper/file_handler.py`)
+### File Handler Module (`src/tempo_scraper/utils/file_handler.py`)
 - Handles saving scraped data to JSON files
 - Manages output directory creation and file naming
+- Implements categorized article saving with separate files per category
 
 ### Article Filters Module (`src/tempo_scraper/article_filters.py`)
 - Provides additional functionality for listing articles with various filter options
@@ -109,6 +108,12 @@ python -m src.tempo_scraper indeks --start-date 2025-09-10
 # Scrape with content extraction (skips non-free articles, no duplicate exports)
 python -m src.tempo_scraper indeks --extract-content
 
+# Scrape with categorization (saves articles in separate files per category)
+python -m src.tempo_scraper indeks --categorize
+
+# Scrape with categorization and content extraction
+python -m src.tempo_scraper indeks --categorize --extract-content
+
 # Extract content from specific article (creates individual JSON file)
 python -m src.tempo_scraper article --url https://www.tempo.co/article-url
 ```
@@ -120,7 +125,7 @@ python -m src.tempo_scraper article --url https://www.tempo.co/article-url
 python -m src.tempo_scraper indeks [--start-page START_PAGE] [--end-page END_PAGE]
                           [--delay DELAY] [--start-date START_DATE]
                           [--end-date END_DATE] [--article-per-page ARTICLE_PER_PAGE]
-                          [--extract-content]
+                          [--extract-content] [--categorize]
 ```
 
 #### Article Extractor
@@ -160,12 +165,16 @@ python tests/test_non_free_filtering.py
 5. **Content Extraction**: Can extract full article content during index scraping
 6. **Flexible Filtering**: Support for page range, date range, and article count filtering
 7. **JSON Output**: Structured JSON output for easy data processing
-8. **Authentication Support**: Can use REMP session ID for accessing premium content
+8. **Categorized Output**: Articles can be saved in separate files by category
+9. **Authentication Support**: Can use REMP session ID for accessing premium content
 
 ## Output Files
 
 All output files are saved in the `data/output/` directory:
-- JSON files for article index data
+- JSON files for article index data (when not using categorization)
+- Directory with categorized output (when using `--categorize`):
+  - Separate JSON files for each article category
+  - Metadata file with scraping information
 - Individual JSON files for each article's full content (only when using standalone article extractor)
 
 ## Limitations with Premium Content Access

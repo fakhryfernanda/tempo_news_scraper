@@ -6,15 +6,14 @@
 
 python -m src.tempo_scraper indeks \
   --start-page 1 \
-  --end-page 1 \
+  --end-page 25 \
   --delay 1 \
-  --extract-content \
   --start-date 2025-09-16 \
   --end-date 2025-09-17 \
-  # --categorize
+  --extract-content \
+  --categorize
   # --rubric politik \
-  # --article-per-page 20 \
-  # --login
+  # --article-per-page 20
 
 # Available parameters for the indeks command:
 # --start-page N        Starting page number (default: 1)
@@ -25,7 +24,7 @@ python -m src.tempo_scraper indeks \
 # --article-per-page N  Number of articles per page (default: 20)
 # --extract-content     Extract full content for each article (default: False)
 # --rubric RUBRIC       Rubric to filter by (default: None)
-# --login               Use authentication for premium content access (default: False)
+# --categorize          Categorize articles by category in separate files (default: False)
 
 # Valid rubrics on tempo.co (in lowercase with dashes for multi-word rubrics):
 # politik
