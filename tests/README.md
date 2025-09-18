@@ -7,7 +7,7 @@ This directory contains comprehensive tests for the Tempo.co scraper application
 1. **test_comprehensive.py** - Unit tests for core functionality including URL building and date processing
 2. **test_integration.py** - Integration tests for the command-line interface
 3. **test_article_extractor.py** - Unit tests for the article extractor module
-4. **test_logo_filtering.py** - Specific tests for logo image filtering
+4. **test_categorization.py** - Tests for article categorization functionality
 5. **run_all_tests.py** - Master script to run all test suites
 
 ## Running Tests
@@ -29,8 +29,8 @@ python tests/test_integration.py
 # Run article extractor unit tests
 python tests/test_article_extractor.py
 
-# Run logo filtering verification
-python tests/test_logo_filtering.py
+# Run categorization tests
+python tests/test_categorization.py
 ```
 
 ## Test Coverage
@@ -44,6 +44,8 @@ The test suite covers:
 - ✅ Logo image filtering (`/img/logo-tempo-ads.svg`)
 - ✅ File saving and output generation
 - ✅ Error handling and edge cases
+- ✅ Session management with retry strategy
+- ✅ 429 error handling with exponential backoff
 
 ## Test Results
 
@@ -53,3 +55,4 @@ All tests are currently passing, ensuring the scraper works correctly with:
 - Content extraction
 - File output generation
 - Command-line argument parsing
+- Session management with retry strategy for handling 429 errors

@@ -114,11 +114,8 @@ python -m src.tempo_scraper indeks --categorize
 # Scrape with categorization and content extraction
 python -m src.tempo_scraper indeks --categorize --extract-content
 
-# Scrape with a custom output name
-python -m src.tempo_scraper indeks --start-page 1 --end-page 1 --output-name my_scraped_articles
-
-# Extract content from specific article with a custom output name
-python -m src.tempo_scraper article --url https://www.tempo.co/article-url --output-name my_article
+# Extract content from specific article (creates individual JSON file)
+python -m src.tempo_scraper article --url https://www.tempo.co/article-url
 ```
 
 ### Command Line Options
@@ -129,12 +126,11 @@ python -m src.tempo_scraper indeks [--start-page START_PAGE] [--end-page END_PAG
                           [--delay DELAY] [--start-date START_DATE]
                           [--end-date END_DATE] [--article-per-page ARTICLE_PER_PAGE]
                           [--extract-content] [--categorize]
-                          [--output-name OUTPUT_NAME]
 ```
 
 #### Article Extractor
 ```bash
-python -m src.tempo_scraper article --url URL [--output-name OUTPUT_NAME]
+python -m src.tempo_scraper article --url URL
 ```
 
 ### Running Tests
@@ -170,21 +166,25 @@ python tests/test_non_free_filtering.py
 6. **Flexible Filtering**: Support for page range, date range, and article count filtering
 7. **JSON Output**: Structured JSON output for easy data processing
 8. **Categorized Output**: Articles can be saved in separate files by category
+9. **Error Handling**: Automatic retry with exponential backoff for 429 and other server errors
 
 ## Output Files
 
 All output files are saved in the `data/output/` directory:
 - JSON files for article index data (when not using categorization)
-- JSON files with custom names (when `--output-name` is provided for index scraping)
 - Directory with categorized output (when using `--categorize`):
   - Separate JSON files for each article category
   - Metadata file with scraping information
-- Directory with categorized output and custom name (when using `--categorize` and `--output-name`):
-  - Separate JSON files for each article category
-  - Metadata file with scraping information
 - Individual JSON files for each article's full content (only when using standalone article extractor)
-- Individual JSON files with custom names (when `--output-name` is provided for article extraction)
 
 ## Limitations with Premium Content Access
 
 Despite the scraper's capabilities, some premium content may still be inaccessible due to server-side paywalls. In such cases, only article metadata and a preview of the content may be available, with the full article content remaining behind a subscription paywall. This is a limitation of the website's architecture and not an issue with the scraper itself.
+
+## Error Handling
+
+The scraper now includes enhanced error handling:
+- **429 "Too Many Requests" errors**: Automatically handled with exponential backoff retry strategy
+- **Network errors**: Automatically retried with exponential backoff
+- **Server errors (5xx)**: Automatically retried with exponential backoff
+- **Rate limiting**: Built-in retry mechanism with progressive delays (0s, 1s, 2s, 4s, etc.)

@@ -16,6 +16,7 @@ A Python-based web scraper for the Indonesian news website [tempo.co](https://ww
 - Prevent duplicate JSON exports when running from index scraper
 - Save data in structured JSON format
 - Categorize articles by category with separate output files per category
+- Handle 429 "Too Many Requests" errors with exponential backoff retry strategy
 
 ## Project Structure
 
@@ -132,6 +133,14 @@ The scraper automatically filters out:
 - "Pilihan Editor:" content from article body
 - Non-free articles (`is_free=false`) during content extraction
 
+### Error Handling
+
+The scraper now includes enhanced error handling:
+- **429 "Too Many Requests" errors**: Automatically handled with exponential backoff retry strategy
+- **Network errors**: Automatically retried with exponential backoff
+- **Server errors (5xx)**: Automatically retried with exponential backoff
+- **Rate limiting**: Built-in retry mechanism with progressive delays (0s, 1s, 2s, 4s, etc.)
+
 ### Output
 
 All output files are saved in the `data/output/` directory:
@@ -213,6 +222,7 @@ python tests/test_non_free_filtering.py # Non-free article filtering tests
 5. **Flexible Filtering**: Support for page range, date range, and article count filtering
 6. **Structured Output**: Data saved in consistent JSON format for easy processing
 7. **Categorized Output**: Articles can be saved in separate files by category
+8. **Error Handling**: Automatic retry with exponential backoff for 429 and other server errors
 
 ## Article Filtering
 

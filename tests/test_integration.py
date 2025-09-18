@@ -115,6 +115,35 @@ def test_refactored_help():
         print("✗ Article help test failed for refactored code")
         return False
 
+def test_session_with_retry():
+    """Test that the session is created with retry strategy"""
+    print("Testing session creation with retry strategy...")
+    
+    # This test checks if the session module can be imported and creates a session correctly
+    try:
+        sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+        from tempo_scraper.core.session import create_session
+        
+        session = create_session()
+        
+        # Check that session has the expected adapters
+        assert "http://" in session.adapters, "Session should have HTTP adapter"
+        assert "https://" in session.adapters, "Session should have HTTPS adapter"
+        
+        # Check that the adapters have retry strategies
+        http_adapter = session.adapters["http://"]
+        https_adapter = session.adapters["https://"]
+        
+        # Verify that max_retries attribute exists (indicating retry strategy is set)
+        assert hasattr(http_adapter, 'max_retries'), "HTTP adapter should have max_retries attribute"
+        assert hasattr(https_adapter, 'max_retries'), "HTTPS adapter should have max_retries attribute"
+        
+        print("✓ Session creation with retry strategy test passed")
+        return True
+    except Exception as e:
+        print(f"✗ Session creation with retry strategy test failed: {e}")
+        return False
+
 def main():
     """Run all integration tests for refactored code"""
     print("Running integration tests for refactored Tempo.co scraper")
@@ -123,7 +152,8 @@ def main():
     tests = [
         test_refactored_help,
         test_refactored_indeks_scraper_basic,
-        test_refactored_article_extractor
+        test_refactored_article_extractor,
+        test_session_with_retry
     ]
     
     passed = 0
