@@ -50,9 +50,14 @@ tempo/
    cd tempo-scraper
    ```
 
-2. Install the required dependencies:
+2. Install the required dependencies using uv:
    ```bash
-   pip install -r requirements.txt
+   uv sync
+   ```
+   
+   Alternatively, you can install and run in one command:
+   ```bash
+   uv run python -m src.tempo_scraper indeks
    ```
 
 ## Usage
